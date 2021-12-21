@@ -1,12 +1,14 @@
 package ir.sk.stock.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
 import ir.sk.stock.service.StockServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,12 +27,15 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
+import static org.mockito.BDDMockito.given;
+
 import static org.hamcrest.Matchers.*;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(StockController.class)
 public class StockControllerTest {
 
@@ -38,9 +43,11 @@ public class StockControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private StockServiceImpl stockServiceImpl;
+    private StockService stockService;
 
-    @Before
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    @BeforeEach
     public void setUp() throws Exception {
 
         Instant first = Instant.parse("1980-04-09T10:15:30.00Z");
@@ -52,23 +59,34 @@ public class StockControllerTest {
 
         Page<Stock> pagedStocks = new PageImpl<>(stocks);
 
-        Mockito.when(stockServiceImpl.getAllStocks(Pageable.ofSize(20))).thenReturn(pagedStocks);
+        when(stockService.getAllStocks(ArgumentMatchers.any())).thenReturn(pagedStocks);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     @Test
-    public void getAllStocks() throws Exception {
+    public void getAllStocksBySize() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/api/v1/stocks")
                 .accept(MediaType.APPLICATION_JSON);
 
         this.mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",is(1)))
+                .andExpect(jsonPath("$.content", Matchers.hasSize(2)))
                 .andReturn();
+    }
 
+    @Test
+    public void getAllStocksByContent() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .get("/api/v1/stocks")
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].name", is("BBT")))
+                .andReturn();
     }
 }
