@@ -1,5 +1,6 @@
 package ir.sk.stock.controller;
 
+import ir.sk.stock.dto.PriceUpdateDTO;
 import ir.sk.stock.exception.ResourceNotFoundException;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 /**
  * Created by sad.kayvanfar on 12/21/2021
@@ -47,13 +49,11 @@ public class StockController {
         return ResponseEntity.ok().body(stock);
     }
 
-    @PutMapping("/stocks/{id}")
-    public ResponseEntity<Stock> updatePokemon(@PathVariable(value = "id") Long id, @Valid @RequestBody Stock stock) throws ResourceNotFoundException {
+    @PatchMapping("/stocks/{id}")
+    public ResponseEntity<Stock> updatePokemon(@PathVariable(value = "id") Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) throws ResourceNotFoundException {
         Stock currPokemon = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
 
-        currPokemon.setName(stock.getName());
-        currPokemon.setCurrentPrice(stock.getCurrentPrice());
-        currPokemon.setLastUpdate(stock.getLastUpdate()); // TODO: 12/22/2021 must be automatic
+        currPokemon.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
 
         final Stock updatedEmployee = stockService.save(currPokemon);
         return ResponseEntity.ok(updatedEmployee);

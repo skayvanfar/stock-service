@@ -50,8 +50,8 @@ public class StockControllerTest {
     @BeforeEach
     public void setUp() throws Exception {
 
-        Instant first = Instant.parse("1980-04-09T10:15:30.00Z");
-        Instant second = Instant.parse("1977-04-09T10:15:30.00Z");
+        Instant first = Instant.parse("2020-12-22T14:42:09.951687Z");
+        Instant second = Instant.parse("2021-12-22T14:42:09.951687Z");
 
         List<Stock> stocks = Arrays.asList(
                 new Stock(1L, "BBT", BigDecimal.valueOf(37.55), first)
@@ -89,4 +89,6 @@ public class StockControllerTest {
                 .andExpect(jsonPath("$.content[0].name", is("BBT")))
                 .andReturn();
     }
+
+
 }

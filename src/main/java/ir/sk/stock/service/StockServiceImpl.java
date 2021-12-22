@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -29,6 +30,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock save(Stock stock) {
+        Instant lastUpdate = Instant.now();
+        stock.setLastUpdate(lastUpdate);
+
         return stockRepository.save(stock);
     }
 
