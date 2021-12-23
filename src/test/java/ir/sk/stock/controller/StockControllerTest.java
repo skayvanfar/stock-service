@@ -80,6 +80,8 @@ public class StockControllerTest {
 
     @Test
     public void getAllStocksByContent() throws Exception {
+        Page<Stock> pagedStocks = new PageImpl<>(stocks);
+        when(stockService.getAllStocks(ArgumentMatchers.any())).thenReturn(pagedStocks);
         RequestBuilder request = MockMvcRequestBuilders
                 .get(baseUrl)
                 .accept(MediaType.APPLICATION_JSON);

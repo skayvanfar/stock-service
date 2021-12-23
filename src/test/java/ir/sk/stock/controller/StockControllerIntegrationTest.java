@@ -50,12 +50,12 @@ public class StockControllerIntegrationTest {
     }
 
     @Test
-    @Sql(statements = "INSERT INTO TBL_STOCK (ID, NAME, CURRENT_PRICE, LAST_UPDATED) VALUES (10, 'CCC', 15.64, '2018-12-22T14:42:09.951687Z')",
+    @Sql(statements = "INSERT INTO TBL_STOCK (ID, NAME, CURRENT_PRICE, LAST_UPDATED) VALUES (10, 'LCC', 15.64, '2018-12-22T14:42:09.951687Z')",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM TBL_STOCK",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void returnAStockWithIdOne() {
-        String expectedName = "CCC";
+        String expectedName = "LCC";
         Stock stock = restTemplate.getForObject(baseUrl.concat("/{id}"), Stock.class, 10);
         assertAll(
                 () -> Assertions.assertNotNull(stock),
@@ -77,7 +77,7 @@ public class StockControllerIntegrationTest {
 
     @Test
     public void createStockAndReturn201HttpStatus() {
-        Stock stock = new Stock(10L, "CCC", BigDecimal.valueOf(15.64), Instant.parse("2018-12-22T14:42:09.951687Z"));
+        Stock stock = new Stock(10L, "CLC", BigDecimal.valueOf(15.64), Instant.parse("2018-12-22T14:42:09.951687Z"));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Stock> postRequest = new HttpEntity<>(stock, headers);
@@ -119,6 +119,10 @@ public class StockControllerIntegrationTest {
     }
 
     @Test
+    @Sql(statements = "INSERT INTO TBL_STOCK (ID, NAME, CURRENT_PRICE, LAST_UPDATED) VALUES (10, 'CHC', 15.64, '2018-12-22T14:42:09.951687Z')",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM TBL_STOCK",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testGetAllStocks() {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
@@ -128,12 +132,15 @@ public class StockControllerIntegrationTest {
         assertNotNull(result.getBody());
 
         assertEquals(true, result.getBody().contains("content"));
-        assertEquals(true, result.getBody().contains("\"totalElements\":6"));
+        System.out.println(result.getBody());
+        assertEquals(true, result.getBody().contains("\"totalElements\":1"));
     }
 
     @Test
-    @Sql(statements = "INSERT INTO TBL_STOCK (ID, NAME, CURRENT_PRICE, LAST_UPDATED) VALUES (10, 'CCC', 15.64, '2018-12-22T14:42:09.951687Z')",
+    @Sql(statements = "INSERT INTO TBL_STOCK (ID, NAME, CURRENT_PRICE, LAST_UPDATED) VALUES (10, 'CHC', 15.64, '2018-12-22T14:42:09.951687Z')",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM TBL_STOCK",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteStockAndReturn200HttpStatus() {
         restTemplate.delete(baseUrl.concat("/{id}"), 10);
 

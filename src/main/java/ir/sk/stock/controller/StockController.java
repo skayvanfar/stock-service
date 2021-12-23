@@ -47,7 +47,7 @@ public class StockController {
                     content = @Content)})
     @GetMapping("/stocks")
     public ResponseEntity<Page<Stock>> getAllStocks(@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(stockService.getAllStocks(pageable)); // 200
+        return ResponseEntity.ok(stockService.getAllStocks(pageable));
     }
 
     @Operation(summary = "Create a new Stock")
@@ -90,8 +90,8 @@ public class StockController {
 
         currStock.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
 
-        final Stock updatedEmployee = stockService.save(currStock);
-        return ResponseEntity.ok(updatedEmployee);
+        final Stock updatedStock = stockService.save(currStock);
+        return ResponseEntity.ok(updatedStock);
     }
 
     @Operation(summary = "Delete the Stock")
