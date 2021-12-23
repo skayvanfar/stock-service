@@ -21,3 +21,6 @@ change to the directory containing  your project source code.  Issue the followi
    **docker-compose -f compose/common/docker-compose.yml up**
 
 If everything starts correctly you should see a bunch of spring boot information fly by on standard out.  At this point all of the services needed for the project code will be running.
+
+## API Documents
+http://localhost:8080/swagger-ui.html

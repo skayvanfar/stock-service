@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
- * hold the sate of a stack
+ * hold the state of a stock
  * Created by sad.kayvanfar on 12/21/2021
  */
 @Data
