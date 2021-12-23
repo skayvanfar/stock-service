@@ -1,6 +1,7 @@
 package ir.sk.stock.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.sk.stock.dto.PriceUpdateDTO;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
 import ir.sk.stock.service.StockServiceImpl;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -28,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.*;
 
@@ -43,31 +46,30 @@ public class StockControllerTest {
     @MockBean
     private StockService stockService;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private String baseUrl = "/api/stocks";
+    private List<Stock> stocks;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
         Instant first = Instant.parse("2020-12-22T14:42:09.951687Z");
         Instant second = Instant.parse("2021-12-22T14:42:09.951687Z");
 
-        List<Stock> stocks = Arrays.asList(
+        stocks = Arrays.asList(
                 new Stock(1L, "BBT", BigDecimal.valueOf(37.55), first)
                 ,new Stock(2L, "BTT", BigDecimal.valueOf(37.55), second));
-
-        Page<Stock> pagedStocks = new PageImpl<>(stocks);
-
-        when(stockService.getAllStocks(ArgumentMatchers.any())).thenReturn(pagedStocks);
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
     }
 
     @Test
     public void getAllStocksBySize() throws Exception {
+        Page<Stock> pagedStocks = new PageImpl<>(stocks);
+        when(stockService.getAllStocks(ArgumentMatchers.any())).thenReturn(pagedStocks);
+
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/stocks")
+                .get(baseUrl)
                 .accept(MediaType.APPLICATION_JSON);
 
         this.mockMvc.perform(request)
@@ -79,7 +81,7 @@ public class StockControllerTest {
     @Test
     public void getAllStocksByContent() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/stocks")
+                .get(baseUrl)
                 .accept(MediaType.APPLICATION_JSON);
 
         this.mockMvc.perform(request)
@@ -88,5 +90,54 @@ public class StockControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void createStockAndReturn201HttpStatus() throws Exception {
+        Stock stock = new Stock(10L, "BBT", BigDecimal.valueOf(37.55), Instant.parse("2020-12-22T14:42:09.951687Z"));
+
+        when(stockService.save(stock)).thenReturn(stock);
+
+        RequestBuilder postRequest = MockMvcRequestBuilders
+                .post(baseUrl)
+                .content(objectMapper.writeValueAsString(stock))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+                .andReturn();
+    }
+
+    @Test
+    public void updateStockAndReturn200HttpStatus() throws Exception {
+        PriceUpdateDTO priceUpdateDTO = new PriceUpdateDTO(BigDecimal.valueOf(37.55));
+        when(stockService.findById(ArgumentMatchers.any())).thenReturn(java.util.Optional.ofNullable(stocks.get(1)));
+        when(stockService.save(ArgumentMatchers.any())).thenReturn(stocks.get(1));
+
+
+        RequestBuilder patchRequest = MockMvcRequestBuilders
+                .patch(baseUrl.concat("/1"))
+                .content(objectMapper.writeValueAsString(priceUpdateDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(patchRequest)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.currentPrice").value(37.55))
+                .andReturn();
+    }
+
+    @Test
+    public void deleteStockAndReturn200HttpStatus() throws Exception {
+        when(stockService.findById(ArgumentMatchers.any())).thenReturn(java.util.Optional.ofNullable(stocks.get(1)));
+
+        RequestBuilder deleteRequest = MockMvcRequestBuilders
+                .delete(baseUrl.concat("/1"))
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(deleteRequest)
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 
 }
