@@ -4,38 +4,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.sk.stock.dto.PriceUpdateDTO;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
-import ir.sk.stock.service.StockServiceImpl;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.hamcrest.Matchers.*;
-
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StockController.class)
 public class StockControllerTest {
@@ -60,7 +52,7 @@ public class StockControllerTest {
 
         stocks = Arrays.asList(
                 new Stock(1L, "BBT", BigDecimal.valueOf(37.55), first)
-                ,new Stock(2L, "BTT", BigDecimal.valueOf(37.55), second));
+                , new Stock(2L, "BTT", BigDecimal.valueOf(37.55), second));
     }
 
     @Test

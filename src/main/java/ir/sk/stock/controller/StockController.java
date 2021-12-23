@@ -41,20 +41,20 @@ public class StockController {
     @Operation(summary = "Get list of all Stocks by pagination")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the book",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid pagination info supplied",
                     content = @Content)})
     @GetMapping("/stocks")
-    public ResponseEntity<Page<Stock>> getAllStocks(@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<Stock>> getAllStocks(@PageableDefault(sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(stockService.getAllStocks(pageable));
     }
 
     @Operation(summary = "Create a new Stock")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Stock is created",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock info supplied",
                     content = @Content)})
     @PostMapping("/stocks")
@@ -65,12 +65,12 @@ public class StockController {
     @Operation(summary = "Get a Stock by its id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the book",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("/stocks/{id}")
     public ResponseEntity<Stock> getStockById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
@@ -80,8 +80,8 @@ public class StockController {
     @Operation(summary = "Update the Stock")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Stock is updated",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock priceUpdate supplied",
                     content = @Content)})
     @PatchMapping("/stocks/{id}")
@@ -97,8 +97,8 @@ public class StockController {
     @Operation(summary = "Delete the Stock")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Stock is deleted",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock id supplied",
                     content = @Content)})
     @DeleteMapping("/stocks/{id}")

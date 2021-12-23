@@ -13,7 +13,10 @@ import java.util.Optional;
 @Service
 public interface StockService {
     Page<Stock> getAllStocks(Pageable pageable);
+
     Stock save(Stock stock);
+
     Optional<Stock> findById(Long id);
+
     void delete(Stock stock);
 }

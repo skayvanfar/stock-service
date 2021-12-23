@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PriceUpdateDTO {
     @NotNull
-    @DecimalMin(value = "0", message = "{constraints.Digits.positive}")
-    @Digits(integer = 12, fraction = 2, message = "{constraints.Digits.decimal.message}")
+    @DecimalMin(value = "0")
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal currentPrice;
 }

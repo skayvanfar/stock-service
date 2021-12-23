@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -28,18 +27,18 @@ import java.time.Instant;
 public class Stock {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @NotNull
-    @Pattern(regexp = "^\\w+$", message = "{constraints.Pattern.alphanumeric.message}")
+    @Pattern(regexp = "^\\w+$")
     @Column(name = "NAME", unique = true)
     private String name;
 
     @NotNull
-    @DecimalMin(value = "0", message = "{constraints.Digits.positive}")
-    @Digits(integer = 12, fraction = 2, message = "{constraints.Digits.decimal.message}")
+    @DecimalMin(value = "0")
+    @Digits(integer = 12, fraction = 2)
     @Column(name = "CURRENT_PRICE")
     private BigDecimal currentPrice;
 

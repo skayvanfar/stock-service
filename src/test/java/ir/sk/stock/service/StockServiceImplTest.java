@@ -2,7 +2,6 @@ package ir.sk.stock.service;
 
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.repository.StockRepository;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StockServiceImplTest {
@@ -37,7 +35,7 @@ public class StockServiceImplTest {
 
         stocks = Arrays.asList(
                 new Stock(1L, "BBT", BigDecimal.valueOf(37.55), first)
-                ,new Stock(2L, "BTT", BigDecimal.valueOf(38.55), second));
+                , new Stock(2L, "BTT", BigDecimal.valueOf(38.55), second));
 
         Page<Stock> pagedStocks = new PageImpl<>(stocks);
         Mockito.when(stockRepository.findAll(Pageable.ofSize(10))).thenReturn(pagedStocks);
