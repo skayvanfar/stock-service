@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StockServiceImplTest {
@@ -36,16 +37,12 @@ public class StockServiceImplTest {
 
         stocks = Arrays.asList(
                 new Stock(1L, "BBT", BigDecimal.valueOf(37.55), first)
-                ,new Stock(2L, "BTT", BigDecimal.valueOf(37.55), second));
+                ,new Stock(2L, "BTT", BigDecimal.valueOf(38.55), second));
 
         Page<Stock> pagedStocks = new PageImpl<>(stocks);
         Mockito.when(stockRepository.findAll(Pageable.ofSize(10))).thenReturn(pagedStocks);
 
         stockService = new StockServiceImpl(stockRepository);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
@@ -59,5 +56,15 @@ public class StockServiceImplTest {
     public void testGetAllStocksByContent() {
         Page<Stock> stocks = stockService.getAllStocks(Pageable.ofSize(10));
         Assert.assertEquals(this.stocks, stocks.getContent());
+    }
+
+    @Test
+    public void testSave() {
+        Stock newStock = new Stock(1L, "KKK", BigDecimal.valueOf(38.45), Instant.parse("1985-04-09T10:15:30.00Z"));
+        Mockito.when(stockRepository.save(newStock)).thenReturn(newStock);
+        String expectedName = "KKK";
+        Stock stock = stockService.save(newStock);
+        Assert.assertNotNull(stock);
+        Assert.assertEquals(expectedName, stock.getName());
     }
 }
