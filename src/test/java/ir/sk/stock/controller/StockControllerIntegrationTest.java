@@ -1,28 +1,21 @@
 package ir.sk.stock.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.sk.stock.StockApplication;
 import ir.sk.stock.dto.PriceUpdateDTO;
 import ir.sk.stock.model.Stock;
-
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.time.Instant;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +35,7 @@ public class StockControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port+ "").concat("/api/stocks");
+        baseUrl = baseUrl.concat(":").concat(port + "").concat("/api/stocks");
     }
 
     @Test
