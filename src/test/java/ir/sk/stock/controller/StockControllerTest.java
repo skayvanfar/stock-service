@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.BDDMockito.given;
-
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.Mockito.when;
@@ -69,7 +67,7 @@ public class StockControllerTest {
     @Test
     public void getAllStocksBySize() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/v1/stocks")
+                .get("/api/stocks")
                 .accept(MediaType.APPLICATION_JSON);
 
         this.mockMvc.perform(request)
@@ -81,7 +79,7 @@ public class StockControllerTest {
     @Test
     public void getAllStocksByContent() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/v1/stocks")
+                .get("/api/stocks")
                 .accept(MediaType.APPLICATION_JSON);
 
         this.mockMvc.perform(request)

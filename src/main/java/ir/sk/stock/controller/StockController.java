@@ -58,7 +58,7 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid Stock info supplied",
                     content = @Content)})
     @PostMapping("/stocks")
-    public ResponseEntity<Stock> createEmployee(@Valid @RequestBody Stock stock) {
+    public ResponseEntity<Stock> createStock(@Valid @RequestBody Stock stock) {
         return new ResponseEntity<>(stockService.save(stock), HttpStatus.CREATED); // 201
     }
 
@@ -72,7 +72,7 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Stock not found",
                     content = @Content) })
     @GetMapping("/stocks/{id}")
-    public ResponseEntity<Stock> getEmployeeById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<Stock> getStockById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
         return ResponseEntity.ok().body(stock);
     }
@@ -85,12 +85,12 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid Stock priceUpdate supplied",
                     content = @Content)})
     @PatchMapping("/stocks/{id}")
-    public ResponseEntity<Stock> updatePokemon(@PathVariable(value = "id") Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) throws ResourceNotFoundException {
-        Stock currPokemon = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
+    public ResponseEntity<Stock> updateStock(@PathVariable(value = "id") Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) throws ResourceNotFoundException {
+        Stock currStock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
 
-        currPokemon.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
+        currStock.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
 
-        final Stock updatedEmployee = stockService.save(currPokemon);
+        final Stock updatedEmployee = stockService.save(currStock);
         return ResponseEntity.ok(updatedEmployee);
     }
 
@@ -102,7 +102,7 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid Stock id supplied",
                     content = @Content)})
     @DeleteMapping("/stocks/{id}")
-    public ResponseEntity<String> deletePokemon(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<String> deleteStock(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
         stockService.delete(stock);
         return ResponseEntity.ok("Deleted");

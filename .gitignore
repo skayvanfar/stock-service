@@ -16,6 +16,6 @@
 
 /target
 **/target/
-/Pokemon/
+/Stock/
 
 .DS_Store
