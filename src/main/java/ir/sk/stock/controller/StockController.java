@@ -91,6 +91,7 @@ public class StockController {
         currStock.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
 
         final Stock updatedStock = stockService.save(currStock);
+        log.info("the stock updated by id: " + updatedStock.getId());
         return ResponseEntity.ok(updatedStock);
     }
 
@@ -105,6 +106,7 @@ public class StockController {
     public ResponseEntity<String> deleteStock(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
         stockService.delete(stock);
+        log.info("the stock deleted by id: " + stock.getId());
         return ResponseEntity.ok("Deleted");
     }
 }
