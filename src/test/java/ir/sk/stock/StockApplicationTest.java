@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 class StockApplicationTest {
 
-    @Test
-    public void contextLoads() {
-    }
+  @Test
+  public void contextLoads() {}
 }
