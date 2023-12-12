@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StockRepository extends PagingAndSortingRepository<Stock, Long> {
+    boolean existsByName(String name);
 }

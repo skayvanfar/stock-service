@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import ir.sk.stock.dto.PriceUpdateDTO;
-import ir.sk.stock.exception.ResourceNotFoundException;
+import ir.sk.stock.dto.StockDTO;
+import ir.sk.stock.exception.StockNotFoundException;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/stocks")
 @CrossOrigin("*")
 public class StockController {
 
@@ -38,75 +39,76 @@ public class StockController {
         this.stockService = stockService;
     }
 
-    @Operation(summary = "Get list of all Stocks by pagination")
+    @GetMapping
+    @Operation(summary = "Get a list of stocks", description = "Retrieve a paginated list of stocks.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the book",
+            @ApiResponse(responseCode = "200", description = "Stocks retrieved successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid pagination info supplied",
                     content = @Content)})
-    @GetMapping("/stocks")
-    public ResponseEntity<Page<Stock>> getAllStocks(@PageableDefault(sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(stockService.getAllStocks(pageable));
+    public ResponseEntity<Page<StockDTO>> getAllStocks(@PageableDefault(sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(stockService.findAll(pageable));
     }
 
-    @Operation(summary = "Create a new Stock")
+    @PostMapping()
+    @Operation(summary = "Create a Stock", description = "Create a new stock.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Stock is created",
+            @ApiResponse(responseCode = "201", description = "Stock is created successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class))}),
+                            schema = @Schema(implementation = StockDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock info supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Stock already exists",
                     content = @Content)})
-    @PostMapping("/stocks")
-    public ResponseEntity<Stock> createStock(@Valid @RequestBody Stock stock) {
-        return new ResponseEntity<>(stockService.save(stock), HttpStatus.CREATED); // 201
+    public ResponseEntity<StockDTO> createStock(@Valid @RequestBody StockDTO stockDTO) {
+        StockDTO createdStock = stockService.create(stockDTO);
+        return new ResponseEntity<>(createdStock, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get a Stock by its id")
+    @GetMapping("/{id}")
+    @Operation(summary = "Get one Stock", description = "Retrieve one stock by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the book",
+            @ApiResponse(responseCode = "200", description = "Stock retrieved successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
                     content = @Content)})
-    @GetMapping("/stocks/{id}")
-    public ResponseEntity<Stock> getStockById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
-        return ResponseEntity.ok().body(stock);
+    public ResponseEntity<StockDTO> getStockById(@PathVariable Long id) {
+        return ResponseEntity.ok(stockService.findOne(id));
     }
 
+    @PatchMapping("/{id}")
     @Operation(summary = "Update the Stock")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Stock is updated",
+            @ApiResponse(responseCode = "200", description = "Stock is updated successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock priceUpdate supplied",
-                    content = @Content)})
-    @PatchMapping("/stocks/{id}")
-    public ResponseEntity<Stock> updateStock(@PathVariable(value = "id") Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) throws ResourceNotFoundException {
-        Stock currStock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Stock not found")})
+    public ResponseEntity<StockDTO> updateStock(@PathVariable Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) {
 
-        currStock.setCurrentPrice(priceUpdateDTO.getCurrentPrice());
-
-        final Stock updatedStock = stockService.save(currStock);
+        StockDTO updatedStock = stockService.updatePrice(id, priceUpdateDTO);
         log.info("the stock updated by id: " + updatedStock.getId());
+
         return ResponseEntity.ok(updatedStock);
     }
 
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete the Stock")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Stock is deleted",
+            @ApiResponse(responseCode = "204", description = "Stock is deleted successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Stock.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid Stock id supplied",
-                    content = @Content)})
-    @DeleteMapping("/stocks/{id}")
-    public ResponseEntity<String> deleteStock(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        Stock stock = stockService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found for this id :: " + id));
-        stockService.delete(stock);
-        log.info("the stock deleted by id: " + stock.getId());
-        return ResponseEntity.ok("Deleted");
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Stock not found")})
+    public ResponseEntity<String> deleteStock(@PathVariable Long id) {
+        stockService.delete(id);
+        log.info("the stock deleted by id: " + id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,10 +1,13 @@
 package ir.sk.stock.service;
 
+import ir.sk.stock.dto.PriceUpdateDTO;
+import ir.sk.stock.dto.StockDTO;
 import ir.sk.stock.model.Stock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -12,11 +15,13 @@ import java.util.Optional;
  */
 @Service
 public interface StockService {
-    Page<Stock> getAllStocks(Pageable pageable);
+    Page<StockDTO> findAll(Pageable pageable);
 
-    Stock save(Stock stock);
+    StockDTO findOne(Long id);
 
-    Optional<Stock> findById(Long id);
+    StockDTO create(StockDTO stockDTO);
 
-    void delete(Stock stock);
+    StockDTO updatePrice(Long id, PriceUpdateDTO newPrice);
+
+    void delete(Long id);
 }

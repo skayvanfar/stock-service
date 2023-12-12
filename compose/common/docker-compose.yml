@@ -9,6 +9,10 @@ services:
       POSTGRES_PASSWORD: "p0stgr@s"
       POSTGRES_DB:       "stockdb"
   stockservice:
+    container_name: stock-service
+    build:
+      context: ../../
+      dockerfile: docker/Dockerfile
     image: skayvanfar/stock-service:stocking
     ports:
       - "8080:8080"
@@ -16,3 +20,5 @@ services:
       PROFILE: "default"
       SERVER_PORT: "8080"
       DATABASESERVER_PORT: "5432"
+    depends_on:
+      - database

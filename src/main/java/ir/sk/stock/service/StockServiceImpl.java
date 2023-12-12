@@ -1,12 +1,19 @@
 package ir.sk.stock.service;
 
+import ir.sk.stock.dto.PriceUpdateDTO;
+import ir.sk.stock.dto.StockDTO;
+import ir.sk.stock.exception.StockAlreadyExistsException;
+import ir.sk.stock.exception.StockNotFoundException;
+import ir.sk.stock.mapper.StockMapper;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -16,35 +23,58 @@ import java.util.Optional;
 @Service
 public class StockServiceImpl implements StockService {
 
-    private StockRepository stockRepository;
+    private final StockRepository stockRepository;
+    private final StockMapper stockMapper;
 
     @Autowired
-    public StockServiceImpl(StockRepository stockRepository) {
+    public StockServiceImpl(StockRepository stockRepository,  StockMapper stockMapper) {
         this.stockRepository = stockRepository;
+        this.stockMapper = stockMapper;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Page<Stock> getAllStocks(Pageable pageable) {
-        return stockRepository.findAll(pageable);
+    public Page<StockDTO> findAll(Pageable pageable) {
+        Page<Stock> stockPage = stockRepository.findAll(pageable);
+        return stockPage.map(stockMapper::stockToStockDTO);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Stock save(Stock stock) {
-        Instant lastUpdate = Instant.now();
-        stock.setLastUpdate(lastUpdate);
-
-        return stockRepository.save(stock);
+    public StockDTO findOne(Long id) {
+        return stockRepository.findById(id)
+                .map(stockMapper::stockToStockDTO)
+                .orElseThrow(() -> new StockNotFoundException("stock %d not found".formatted(id)));
     }
 
+    @Transactional
     @Override
-    public Optional<Stock> findById(Long id) {
-        return stockRepository.findById(id);
+    public StockDTO create(StockDTO stockDTO) {
+        if (stockRepository.existsByName(stockDTO.getName())) {
+            throw StockAlreadyExistsException.withName(stockDTO.getName());
+        }
+
+        Stock stock = stockMapper.stockDTOToStock(stockDTO);
+        stock.setLastUpdate(Instant.now());
+        stock = stockRepository.save(stock);
+        return stockMapper.stockToStockDTO(stock);
     }
 
+    @Transactional
     @Override
-    public void delete(Stock stock) {
-        stockRepository.delete(stock);
+    public StockDTO updatePrice(Long id, PriceUpdateDTO newPrice) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> StockNotFoundException.withId(id));
+
+        stock.setCurrentPrice(newPrice.getCurrentPrice());
+        stock = stockRepository.save(stock);
+        return stockMapper.stockToStockDTO(stock);
     }
 
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> StockNotFoundException.withId(id));
+        stockRepository.deleteById(stock.getId());
+    }
 
 }
