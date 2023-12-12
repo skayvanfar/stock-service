@@ -2,10 +2,13 @@ FROM openjdk:17-jdk-slim-buster
 
 WORKDIR /home/stock-service
 
-RUN apt-get update -y && apt-get upgrade -y  && apt-get install -y bash
+RUN apt-get install -y bash
+
+ADD docker/entrypoint.sh entrypoint.sh
+RUN chmod 755 entrypoint.sh
+
 RUN mkdir -p /usr/local/stockservice
 ADD target/*.jar /usr/local/stockservice/app.jar
-ADD docker/run.sh run.sh
-RUN chmod +x ./run.sh
-CMD ./run.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
 

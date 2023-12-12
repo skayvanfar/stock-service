@@ -113,7 +113,7 @@
 
     <build>
         <plugins>
-            <!-- I use the Resources plugin to filer Dockerfile and run.sh, it inserts actual JAR filename -->
+            <!-- I use the Resources plugin to filer Dockerfile and entrypoint.sh, it inserts actual JAR filename -->
             <!-- The final Dockerfile will be created in target/dockerfile/Dockerfile -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
