@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: stockservice
-  profiles:
-    active:
-      default

@@ -1,9 +1,24 @@
 spring:
+  application:
+    name: stock-service
+  profiles:
+    active:
+      ${PROFILE:default}
   datasource:
+    type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://database:5432/stockdb"
-    username: "postgres"
-    password: "p0stgr@s"
+    url: ${STOCK_DB_URL:jdbc:postgresql://localhost:5432/stockdb}
+    username: ${STOCK_DB_USER:stock}
+    password: ${STOCK_DB_PASSWORD:SToc1K}
+    hikari:
+      maximum-pool-size: 15
+      auto-commit: false
+      max-lifetime: 600000
+      keepalive-time: 300000
+      data-source-properties:
+        reWriteBatchedInserts: true
+        tcpKeepAlive: true
+        ipTypes: PUBLIC,PRIVATE
   jpa:
     hibernate:
       ddl-auto: create-drop
