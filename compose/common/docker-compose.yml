@@ -22,7 +22,5 @@ services:
       STOCK_DB_URL: 'jdbc:postgresql://postgresql-db:5432/stockdb'
       STOCK_DB_USER: 'stock'
       STOCK_DB_PASSWORD: 'SToc1K'
-      SERVER_PORT: "8080"
-      DATABASESERVER_PORT: "5432"
     depends_on:
       - postgresql-db
