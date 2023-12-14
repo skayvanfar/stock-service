@@ -8,18 +8,18 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class StockServiceImplTest {
 
   private StockService stockService;
@@ -30,7 +30,7 @@ public class StockServiceImplTest {
 
   private List<Stock> stocks;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Instant first = Instant.parse("1980-04-09T10:15:30.00Z");
     Instant second = Instant.parse("1977-04-09T10:15:30.00Z");
@@ -50,13 +50,13 @@ public class StockServiceImplTest {
   public void testGetAllStocksBySize() {
     int expectedSize = 2;
     Page<StockDTO> Stocks = stockService.findAll(Pageable.ofSize(10));
-    Assert.assertEquals(expectedSize, Stocks.getTotalElements());
+    Assertions.assertEquals(expectedSize, Stocks.getTotalElements());
   }
 
   @Test
   public void testGetAllStocksByContent() {
     Page<StockDTO> stocks = stockService.findAll(Pageable.ofSize(10));
-    Assert.assertEquals(this.stocks, stocks.getContent());
+    Assertions.assertEquals(this.stocks, stocks.getContent());
   }
 
   @Test
@@ -69,7 +69,7 @@ public class StockServiceImplTest {
     Mockito.when(stockRepository.save(newStock)).thenReturn(newStock);
     String expectedName = "KKK";
     StockDTO stock = stockService.create(stockDTO);
-    Assert.assertNotNull(stock);
-    Assert.assertEquals(expectedName, stock.getName());
+    Assertions.assertNotNull(stock);
+    Assertions.assertEquals(expectedName, stock.getName());
   }
 }
