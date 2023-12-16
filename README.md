@@ -49,7 +49,7 @@
 
 2. Build **Stock Service** application and run tests:
    ```bash
-   mvn clean install
+   ./mvnw clean install
 
 3. Start the Postgresql database and run stock-service application using Docker Compose:
     ```bash
