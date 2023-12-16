@@ -60,4 +60,6 @@
 
 5. Test **Stock Service** application (see *curl example* in [Stock Service API](#stock-service-api))
 
+6. [spring boot actuator](http://localhost:8080/stock-service/actuator)
+
 
