@@ -1,5 +1,7 @@
 package ir.sk.stock.service;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import ir.sk.stock.dto.StockDTO;
 import ir.sk.stock.mapper.StockMapper;
 import ir.sk.stock.mapper.StockMapperImpl;
@@ -19,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class StockServiceImplTest {

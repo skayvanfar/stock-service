@@ -32,7 +32,7 @@ public class StockControllerIntegrationTest {
 
   @BeforeEach
   public void setUp() {
-    baseUrl = baseUrl.concat(":").concat(port + "").concat("/api/stocks");
+    baseUrl = baseUrl.concat(":").concat(port + "").concat("/stock-service").concat("/api/stocks");
   }
 
   @Test

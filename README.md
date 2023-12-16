@@ -1,26 +1,63 @@
 # Stock-service
-## Software needed
-1.	Apache Maven (http://maven.apache.org).
-2.	Docker (http://docker.com).
-3.	Git Client (http://git-scm.com).
 
-## Building the Docker Image
-To build the code for project as a docker image, open a command-line window change to the directory where you have downloaded the project source code.
+## General Information
 
-Run the following maven command.  This command will execute the [Spotify docker plugin](https://github.com/spotify/docker-maven-plugin) defined in the pom.xml file.  
+* The **Stock Service** is a JVM-based backend application built with **Spring Boot**, **Hibernate**, **PostgreSQL**, **Springdoc-openApi**, **Docker Compose**, **JUnit 5**, and **YAML** property configuration.
+* The **Stock Service** uses [JUnit 5](https://junit.org/junit5/) and [TestContainer](https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/) to run test database and Springboot integration tests.
+* The **Stock Service** uses [springdoc-openapi](https://springdoc.org/) to generate OpenAPI documentation
+* The **Stock Service** exposes a RESTful API to manage stocks
+* The **Stock Service** can be run locally with **docker-compose** (no local PostgreSQL installation required)
 
-   **mvn clean package docker:build**
+## Database Schema
 
-If everything builds successfully you should see a message indicating that the build was successful.
+      column      |    type   |    description
+    --------------|-----------|-----------------------------
+    id            | integer   | stock id, primary key
+    --------------|-----------|-----------------------------
+    name          | text      | stock company name, unique
+    --------------|-----------|-----------------------------
+    current_price | numeric   | stock price
+    --------------|-----------|-----------------------------
+    last_update   | timestamp | timestamp with timezone
 
-## Running the Application
+## Stock Service API
 
-Now we are going to use docker-compose to start the actual image.  To start the docker image,
-change to the directory containing  your project source code.  Issue the following docker-compose command:
+                       |       API endpoint        |    curl example
+    -------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
+    Get list of Stocks | GET '/api/stocks'         | curl -X GET 'localhost:8080/stock-Service/api/stocks?page=0&size=40&sort=name'
+    -------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
+    Get Stock by id    | GET '/api/stocks/{id}'    | curl -X GET 'localhost:8080/stock-Service/api/stocks/1'
+    -------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
+    Create new Stock   | POST '/api/stocks'        | curl -X POST 'localhost:8080/stock-Service/api/stocks' -H 'Content-Type: application/json' --data-raw '{"name": "BNB", "currentPrice": 100}'
+    -------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
+    Update Stock price | PATCH '/api/stocks/{id}'  | curl -X PATCH 'localhost:8080/stock-Service/api/stocks/11?price=34'
+    -------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
+    Delete Stock       | DELETE '/api/stocks/{id}' | curl -X DELETE 'localhost:8080/stock-Service/api/stocks/2'
 
-   **docker-compose -f compose/common/docker-compose.yml up**
+## Prerequisites
+- Java Development Kit (JDK) 17 or higher (https://www.java.com).
+- Apache Maven (http://maven.apache.org).
+- Git Client (http://git-scm.com).
+- Docker (http://docker.com).
+- Docker Compose (https://docs.docker.com/compose/).
 
-If everything starts correctly you should see a bunch of spring boot information fly by on standard out.  At this point all of the services needed for the project code will be running.
+## Getting Started
+1. clone **Stock Service** repository:
+   ```bash
+   git clone https://github.com/skayvanfar/stock-service.git
+   cd stock-service
 
-## API Documents
-http://localhost:8080/swagger-ui.html
+2. Build **Stock Service** application and run tests:
+   ```bash
+   mvn clean install
+
+3. Start the Postgresql database and run stock-service application using Docker Compose:
+    ```bash
+    docker-compose compose/common/docker-compose.yml up -d
+
+4. Open **Stock Service** OpenAPI documentation
+   [swagger ui](http://localhost:8080/stock-service/swagger-ui.html)
+
+5. Test **Stock Service** application (see *curl example* in [Stock Service API](#stock-service-api))
+
+
