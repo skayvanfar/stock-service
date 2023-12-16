@@ -9,7 +9,7 @@ import ir.sk.stock.dto.PriceUpdateDTO;
 import ir.sk.stock.dto.StockDTO;
 import ir.sk.stock.model.Stock;
 import ir.sk.stock.service.StockService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
