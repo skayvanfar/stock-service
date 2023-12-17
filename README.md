@@ -53,7 +53,7 @@
 
 3. Start the Postgresql database and run stock-service application using Docker Compose:
     ```bash
-    docker-compose compose/common/docker-compose.yml up -d
+    docker-compose -f compose/common/docker-compose.yml up -d
 
 4. Open **Stock Service** OpenAPI documentation
    [swagger ui](http://localhost:8080/stock-service/swagger-ui.html)
