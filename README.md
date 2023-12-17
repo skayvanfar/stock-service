@@ -3,7 +3,7 @@
 ## General Information
 
 * The **Stock Service** is a JVM-based backend application built with **Spring Boot**, **Hibernate**, **PostgreSQL**, **Springdoc-openApi**, **Docker Compose**, **JUnit 5**, and **YAML** property configuration.
-* The **Stock Service** uses [JUnit 5](https://junit.org/junit5/) and [TestContainer](https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/) to run test database and Springboot integration tests.
+* The **Stock Service** uses [JUnit 5](https://junit.org/junit5/) to run test database and Springboot integration tests.
 * The **Stock Service** uses [springdoc-openapi](https://springdoc.org/) to generate OpenAPI documentation
 * The **Stock Service** exposes a RESTful API to manage stocks
 * The **Stock Service** can be run locally with **docker-compose** (no local PostgreSQL installation required)
