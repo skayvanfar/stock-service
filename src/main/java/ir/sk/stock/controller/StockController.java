@@ -120,7 +120,7 @@ public class StockController {
       @PathVariable Long id, @Valid @RequestBody PriceUpdateDTO priceUpdateDTO) {
 
     StockDTO updatedStock = stockService.updatePrice(id, priceUpdateDTO);
-    log.info("the stock updated by id: " + updatedStock.getId());
+    log.info("the stock updated by id: " + updatedStock.id());
 
     return ResponseEntity.ok(updatedStock);
   }

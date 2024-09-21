@@ -82,6 +82,6 @@ public class StockServiceImplTest {
     Mockito.when(stockRepository.save(any(Stock.class))).thenReturn(oldStock);
     StockDTO stock = stockService.create(stockDTO);
     Assertions.assertNotNull(stock);
-    Assertions.assertEquals(oldStock.getCurrentPrice(), stock.getCurrentPrice());
+    Assertions.assertEquals(oldStock.getCurrentPrice(), stock.currentPrice());
   }
 }

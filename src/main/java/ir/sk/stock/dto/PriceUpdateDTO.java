@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Created by sad.kayvanfar on 12/22/2021 */
+/**
+ * Created by sad.kayvanfar on 12/22/2021
+ * better to replace with record
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

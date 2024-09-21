@@ -46,8 +46,8 @@ public class StockServiceImpl implements StockService {
   @Transactional
   @Override
   public StockDTO create(StockDTO stockDTO) {
-    if (stockRepository.existsByName(stockDTO.getName())) {
-      throw StockAlreadyExistsException.withName(stockDTO.getName());
+    if (stockRepository.existsByName(stockDTO.name())) {
+      throw StockAlreadyExistsException.withName(stockDTO.name());
     }
 
     Stock stock = stockMapper.stockDTOToStock(stockDTO);
