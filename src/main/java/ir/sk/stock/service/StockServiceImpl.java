@@ -40,7 +40,7 @@ public class StockServiceImpl implements StockService {
     return stockRepository
         .findById(id)
         .map(stockMapper::stockToStockDTO)
-        .orElseThrow(() -> new StockNotFoundException("stock %d not found".formatted(id)));
+        .orElseThrow(() -> StockNotFoundException.withId(id));
   }
 
   @Transactional
